@@ -16,18 +16,20 @@ box__BoxBase-sc-1ww1anb-0 kXWFxm BrowseArticleListItemDesktop__ContentBox-sc-1sz
 
 async def main():
     async with httpx.AsyncClient() as client:
-        r = await client.get("https://www.zoomit.ir/")
+        r = await client.get("https://bama.ir/car?transmission=automatic")
     soup = BeautifulSoup(r, "lxml")
-    with open("content.html", "w") as content:
-        content.write(soup.prettify())
     boxes = soup.find_all(
         "div",
-        class_="box__BoxBase-sc-1ww1anb-0 kXWFxm BrowseArticleListItemDesktop__ContentBox-sc-1szqe4e-5 gpOrSi",
+        class_="bama-adlist-container",
     )
-    with open("tags.txt", "w") as tags_txt:
+    with open("output.txt", "w") as tags_txt:
         for box in boxes:
-            tags_txt.write(f"{box.a.span.text}\n")
-            tags_txt.write(f"\t{box.p.text}\n\n")
+            tags_txt.write(
+                f"""
+{box.a.find("div", class_="bama-ad__price-row").find("div", class_="bama-ad__price-holder").span.text}
+\n\n
+"""
+            )
 
 
 if __name__ == "__main__":
